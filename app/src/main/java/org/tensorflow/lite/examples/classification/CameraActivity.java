@@ -118,7 +118,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private Device device = Device.CPU;
   private int numThreads = 1;
 
-//  private TextToSpeech textToSpeech;
+  private TextToSpeech textToSpeech;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -137,25 +137,24 @@ public abstract class CameraActivity extends AppCompatActivity
       requestPermission();
     }
 
-    //initialising tts object todo
-//    textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-//      @Override
-//      public void onInit(int status) {
-//        if(status == TextToSpeech.SUCCESS){
-//            int ttsLang = textToSpeech.setLanguage(Locale.US);
-//
-//            if(ttsLang == TextToSpeech.LANG_MISSING_DATA || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED){
-//              Log.e("TTS", "The Language is not supported!");
-//            }else{
-//              Log.i("TTS", "Language Supported.");
-//            }
-//          Toast.makeText(getApplicationContext(), "TTS Initialization succeed!", Toast.LENGTH_SHORT).show();
-//          Log.i("TTS", "Initialization success.");
-//        }else{
-//          Toast.makeText(getApplicationContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
-//        }
-//      }
-//    });
+    textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+      @Override
+      public void onInit(int status) {
+        if(status == TextToSpeech.SUCCESS){
+            int ttsLang = textToSpeech.setLanguage(Locale.US);
+
+            if(ttsLang == TextToSpeech.LANG_MISSING_DATA || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED){
+              Log.e("TTS", "The Language is not supported!");
+            }else{
+              Log.i("TTS", "Language Supported.");
+            }
+          Toast.makeText(getApplicationContext(), "TTS Initialization succeed!", Toast.LENGTH_SHORT).show();
+          Log.i("TTS", "Initialization success.");
+        }else{
+          Toast.makeText(getApplicationContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
 
 //    threadsTextView = findViewById(R.id.threads);
 //    plusImageView = findViewById(R.id.plus);
@@ -597,7 +596,9 @@ public abstract class CameraActivity extends AppCompatActivity
                 //do nothing
             }else{
               if (recognition.getConfidence() != null && recognition.getConfidence() * 100 > threshold) {}
-                // todo textToSpeech.speak(recognition.getTitle(), TextToSpeech.QUEUE_FLUSH, null);
+                if (!textToSpeech.isSpeaking()) {
+                  textToSpeech.speak(recognition.getTitle(), TextToSpeech.QUEUE_FLUSH, null);
+                }
             }
         }
 
